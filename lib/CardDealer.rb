@@ -216,10 +216,50 @@ class CardDealer
   
   def nextTreasure
     
+    if @unusedTreasures.empty?
+            
+      while !@usedTreasures.empty?
+                
+        @unusedTreasures.push(@usedTreasures[0])
+
+        @usedTreasures.remove(0)
+
+      end
+
+      shuffleTreasures
+
+    end
+
+    nextTrs = @unusedTreasures[0]
+
+    @unusedTreasures.remove(0)
+
+    return nextTrs
+    
   end
   
   
   def nextMonster
+    
+    if @unusedMonsters.empty?
+            
+      while !@usedMonsters.empty?
+                
+        @unusedMonsters.push(@usedMonsters[0])
+
+        @usedMonsters.remove(0)
+
+      end
+
+      shuffleMonsters
+
+    end
+
+    nextMnst = @unusedMonsters[0]
+
+    @unusedMonsters.remove(0)
+
+    return nextMnst
     
   end
   
@@ -239,6 +279,9 @@ class CardDealer
   
   
   def initCards
+    
+    initTreasureCardDeck
+    initMonsterCardDeck
     
   end
   

@@ -17,6 +17,7 @@ class Napakalaki
   @indexCurrentPlayer = -1
   @currentPlayer
   @currentMonster
+  @dealer = CardDealer.new
   
   
   def initPlayers (names)
@@ -53,6 +54,8 @@ class Napakalaki
   
   def nextTurnAllowed
     
+    return @currentPlayer.validState
+    
   end
   
   
@@ -83,15 +86,21 @@ class Napakalaki
   
   def initGame (names)
     
+    @dealer.initCards
+    
   end
   
   
   def getCurrentPlayer
     
+    return @currentPlayer
+    
   end
   
   
   def getCurrentMonster
+    
+    return @currentMonster
     
   end
   
@@ -102,6 +111,8 @@ class Napakalaki
   
   
   def endOfGame (combatResult)
+    
+    return (combatResult == CombatResult::WINANDWINGAME)
     
   end
   

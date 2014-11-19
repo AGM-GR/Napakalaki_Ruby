@@ -43,20 +43,39 @@ class BadConsequence
   
   def isEmpty
     
-    if(@text.length == 0 && @levels == 0 && 
+    return (@text.length == 0 && @levels == 0 && 
           @nVisibleTreasures == 0 && 
           @nHiddenTreasures == 0 && 
-          @specificVisibleTreasures.size == 0 && 
-          @specificHiddenTreasures.size == 0)
-
-      return true
-
-    else
-
-      return false
-      
-    end
+          @specificVisibleTreasures.empty? && 
+          @specificHiddenTreasures.empty?)
     
+  end
+  
+  def substractVisibleTreasure(trs)
+
+    if !@specificVisibleTreasures.empty?
+
+      @specificVisibleTreasures.delete(trs.Type)
+
+    elsif @nVisibleTreasures != 0
+
+      @nVisibleTreasures = @nVisibleTreasures -1
+
+    end
+
+  end
+
+  def substractHiddenTreasure(trs)
+
+      if !@specificHiddenTreasures.empty?
+
+        @specificHiddenTreasures.delete(trs.Type);
+
+      elsif (nHiddenTreasures != 0)
+
+        @nHiddenTreasures = @nHiddenTreasures -1
+
+      end
   end
   
   private_class_method :new

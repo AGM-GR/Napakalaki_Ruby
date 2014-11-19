@@ -108,8 +108,8 @@ for i in 0..(monsters.length - 1)
   
   if !monsters[i].badConsequence.death && monsters[i].badConsequence.nHiddenTreasures == 0 && 
       monsters[i].badConsequence.nVisibleTreasures == 0 && 
-      monsters[i].badConsequence.specificVisibleTreasures.size == 0 && 
-      monsters[i].badConsequence.specificHiddenTreasures.size == 0
+      monsters[i].badConsequence.specificVisibleTreasures.empty? && 
+      monsters[i].badConsequence.specificHiddenTreasures.empty?
     
     puts (monsters[i].to_s)
     

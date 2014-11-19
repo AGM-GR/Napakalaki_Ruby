@@ -41,7 +41,7 @@ class Player
     
     for i in 0..(@visibleTreasures.size - 1)
       
-      if @visibleTreasures[i].getType() == TreasureKind::NECKLACE
+      if @visibleTreasures[i].Type == TreasureKind::NECKLACE
         
         collarVisible = true
         
@@ -108,7 +108,7 @@ class Player
   
   def dieIfNoTreasures
     
-    if (@visibleTreasures.size == 0 && @hiddenTreasures.size == 0)
+    if (@visibleTreasures.empty? && @hiddenTreasures.empty?)
       
       @dead = true
       
@@ -118,6 +118,23 @@ class Player
   
   
   def discardNecklaceIfVisible
+    
+    necklace_found = false
+    cardDealer = cardDealer.new
+
+    for i in 0..(@visibleTreasures.size - 1) && !necklace_found
+
+      if @visibleTreasures[i].Type == TreasureKind::NECKLACE
+
+        necklace_found = true
+
+        cardDealer.giveTreasureBack(@visibleTreasures[i])
+
+        @visibleTreasures.remove(i)
+         
+      end
+      
+    end
     
   end
   
@@ -129,22 +146,27 @@ class Player
   end
   
   
-  def computeGoldCoinsValue
+  def computeGoldCoinsValue(trs)
+    
+    gold = 0
+    lvls = 0
+
+    for i in 0..(trs.size-1)
+
+      gold += trs[i].getGoldCoins
+        
+    end
+
+    lvls = gold / 1000.0
+
+    return lvls
     
   end
   
   
   def canIBuyLevels (levels)
 
-    if (@level+levels < 10)
-      
-      return true
-
-    else
-      
-      return false
-    
-    end
+    return (@level+levels < 10)
     
   end
   
@@ -160,6 +182,40 @@ class Player
   
   
   def canMakeTreasureVisible (treasure)
+    
+    if (treasure.Type == TreasureKind::SHOE && howManyVisibleTreasures(TreasureKind::SHOE) == 0)
+            
+      return true
+        
+    elsif (treasure.Type == TreasureKind::ARMOR && howManyVisibleTreasures(TreasureKind::ARMOR) == 0)
+            
+      return true
+        
+    elsif (treasure.Type == TreasureKind::NECKLACE && howManyVisibleTreasures(TreasureKind::NECKLACE) == 0)
+        
+      return true
+        
+    elsif (treasure.Type == TreasureKind::HELMET && howManyVisibleTreasures(TreasureKind::HELMET) == 0)
+                     
+      return true
+        
+    elsif (treasure.Type == TreasureKind::ONEHAND && 
+            howManyVisibleTreasures(TreasureKind::ONEHAND) < 2 && 
+            howManyVisibleTreasures(TreasureKind::BOTHHAND) == 0)
+            
+      return true
+        
+    elsif (treasure.Type == TreasureKind::BOTHHAND && 
+            howManyVisibleTreasures(TreasureKind::BOTHHAND) == 0 && 
+            howManyVisibleTreasures(TreasureKind::ONEHAND) == 0)
+            
+      return true
+        
+    else
+            
+      return false
+      
+    end
     
   end
   
@@ -223,15 +279,7 @@ class Player
   
   def validState
     
-    if (pendingbadConsequence.size == 0 && hiddenTreasures.size <= 4)    
-
-      return true
-
-    else
-            
-      return false
-      
-    end
+    return (pendingbadConsequence.empty? && hiddenTreasures.size <= 4)    
     
   end
   
@@ -243,15 +291,7 @@ class Player
   
   def hasVisibleTreasures
     
-    if visibleTreasures.size() > 0
-
-      return true
-
-    else
-
-      return false
-      
-    end
+    return (visibleTreasures.size() > 0)
     
   end
   
