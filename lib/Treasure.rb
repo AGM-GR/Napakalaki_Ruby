@@ -6,7 +6,7 @@ require_relative 'TreasureKind.rb'
 
 class Treasure
   
-  att_reader :name,:goldCoins,:minBonus,:maxBonus,:Type;
+  attr_reader :name,:goldCoins,:minBonus,:maxBonus,:Type;
   
   def initialize (name, goldCoins, min, max, treasurekind)
     

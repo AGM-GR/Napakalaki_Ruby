@@ -43,43 +43,79 @@ class Napakalaki
 
       @indexCurrentPlayer = (@indexCurrentPlayer + 1) % @players.size
 
-      currentPlayer = @players[@indexCurrentPlayer] 
+      @currentPlayer = @players[@indexCurrentPlayer] 
     
     end
 
-    return currentPlayer
+    return @currentPlayer
     
   end
   
   
   def nextTurnAllowed
     
-    return @currentPlayer.validState
+    if @currentPlayer == nil
+            
+            return true
+        
+    else
+    
+      return @currentPlayer.validState
+    
+    end
     
   end
   
   
   def developCombat
+            
+    result = @currentPlayer.combat(@currentMonster)
+        
+    @dealer.giveMonsterBack(@currentMonster)
+        
+    return result
     
   end
   
   
   def discardVisibleTreasures (treasures)
     
+    for i in 0..(treasures.size-1)
+        
+      @currentPlayer.discardVisibleTreasure(treasures[i])
+      @dealer.giveTreasureBack(treasures[i])
+
+    end
+    
   end
   
   
   def discardHiddenTreasures (treasures)
+    
+    for i in 0..(treasures.size-1)
+        
+      @currentPlayer.discardHiddenTreasure(treasures[i])
+      @dealer.giveTreasureBack(treasures[i])
+
+    end
     
   end
   
   
   def makeTreasuresVisible (treasures)
     
+    for i in 0..(treasures.size-1)
+            
+      @currentPlayer.makeTreasureVisible(treasures[i])
+      
+    end
+    
   end
   
   
   def buyLevels (visibleTreasures, hiddenTreasures)
+    
+    return @currentPlayer.buyLevels(visibleTreasures,hiddenTreasures);
     
   end
   
@@ -87,6 +123,8 @@ class Napakalaki
   def initGame (names)
     
     @dealer.initCards
+    initPlayers(names)
+    nextTurn
     
   end
   
@@ -106,6 +144,25 @@ class Napakalaki
   
   
   def nextTurn
+    
+    if nextTurnAllowed
+            
+      nextPlayer
+
+      @currentMonster = @dealer.nextMonster
+
+      if @currentPlayer.dead
+
+        @currentPlayer.initTreasures
+      end
+
+      return true
+      
+    else
+
+      return false
+    
+    end
     
   end
   

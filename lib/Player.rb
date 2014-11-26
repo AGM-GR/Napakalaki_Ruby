@@ -11,7 +11,7 @@ require_relative 'Dice.rb'
 
 class Player
   
-  att_reader :dead, :level;
+  attr_reader :dead, :level;
   
   def initialize(name, dead, level, pendingbadConsequence, visibleTreasures, hiddenTreasures)
     @name = name
@@ -141,7 +141,27 @@ class Player
   
   def die
     
-    @dead = true
+    setLevel(1)
+        
+    dealer = CardDealer.new
+
+    for i in 0..(@visibleTreasures.size-1)
+
+      dealer.giveTreasureBack(@visibleTreasures[i])
+      
+    end
+
+    @visibleTreasures.clear
+
+    for i in 0..(@hiddenTreasures.size-1)
+
+      dealer.giveTreasureBack(@hiddenTreasures[i])
+      
+    end
+
+    @hiddenTreasures.clear
+
+    dieIfNoTreasures
     
   end
   
@@ -149,7 +169,7 @@ class Player
   def computeGoldCoinsValue(trs)
     
     gold = 0
-    lvls = 0
+    #lvls = 0
 
     for i in 0..(trs.size-1)
 
@@ -157,9 +177,9 @@ class Player
         
     end
 
-    lvls = gold / 1000.0
+    #lvls = gold / 1000.0
 
-    return lvls
+    return gold
     
   end
   
@@ -173,11 +193,39 @@ class Player
   
   def applyPrize (currentMonster)
     
+    nLevels = currentMonster.getLevelsGained
+        
+    incrementLevels(nLevels)
+
+    nTreasures = currentMonster.getTreasuresGained
+
+    if nTreasures > 0
+
+      dealer = CardDealer.new
+
+      for i in 0..(nTreasures-1)
+
+        trs = dealer.nextTreasure
+
+        @hiddenTreasures.push(trs)
+
+      end
+      
+    end
+    
   end
   
   
-  def applyBadConsequence (currentMonster)
+  def applyBadConsequence (bad)
     
+    nLevels = bad.getLevels
+        
+    decrementLevels(nLevels)
+        
+    pendingBad = bad.adjustToFitTreasureList(@visibleTreasures,@hiddenTreasures)
+
+    setPendingBadConsequence(pendingBad)
+
   end
   
   
@@ -240,20 +288,84 @@ class Player
   
   def getVisibleTreasures
     
+    return @visibleTreasures
+    
   end
   
   
   def getHiddenTreasures
+    
+    return @hiddenTreasures
     
   end
  
   
   def combat (monster)
     
+    myLevel = getCombatLevel
+    monsterLevel = monster.combatLevel
+
+    if myLevel > monsterLevel
+
+      applyPrize(monster)
+
+      if getLevels() >= 10
+
+        return CombatResult::WINANDWINGAME
+
+      else
+
+        return CombatResult::WIN              
+
+      end
+
+    else
+
+      dice = Dice.new
+
+      escape = dice.nextNumber
+
+      if escape < 5
+
+        amIDead = monster.kills
+
+        if amIDead
+
+            die
+
+          return CombatResult::LOSEANDDIE
+
+        else
+
+          bad = monster.badConsequence
+
+          applyBadConsequence(bad)
+
+          return CombatResult::LOSE
+
+        end
+
+      else
+
+        return CombatResult::LOSEANDESCAPE
+        
+      end
+      
+    end
+    
   end
   
   
   def makeTreasureVisible (treasure)
+    
+    canI = canMakeTreasureVisible(treasure)
+        
+    if canI
+
+      @visibleTreasures.push(treasure)
+      @hiddenTreasures.delete(treasure)
+      
+    end
     
   end
   
@@ -262,6 +374,14 @@ class Player
     
     @visibleTreasures.delete(treasure)
     
+    if (@pendingbadConsequence != nil && !@pendingbadConsequence.empty?)
+            
+      @pendingbadConsequence.substractVisibleTreasure(t)
+      
+    end
+        
+    dieIfNoTreasures
+    
   end
   
   
@@ -269,22 +389,88 @@ class Player
     
     @hiddenTreasures.delete(treasure)
     
+    if (@pendingbadConsequence != nil && !@pendingbadConsequence.empty?)
+            
+      @pendingbadConsequence.substractHiddenTreasure(t)
+      
+    end
+        
+    dieIfNoTreasures
+    
   end
 
   
   def buyLevels (visibleTreasures, hiddenTreasures)
+    
+    levelsMayBought = computeGoldCoinsValue(visibleTreasures)
+    levelsMayBought += computeGoldCoinsValue(hiddenTreasures)
+
+    level = (levelsMayBought)/1000
+
+    canI = canIBuyLevels(level)
+
+    if (canI)
+
+        incrementLevels(level)
+        
+    end
+
+    @visibleTreasures = @visibleTreasures - visibleTreasures
+    @hiddenTreasures = @hiddenTreasures - hiddenTreasures
+
+    dealer = CardDealer.new
+
+    for i in 0..(visibleTreasures.size-1)
+
+        dealer.giveTreasureBack(visibleTreasures[i])
+    end
+
+    for i in 0..(hiddenTreasures.size-1)
+
+        dealer.giveTreasureBack(hiddenTreasures[i])
+    end
+
+    return canI
     
   end
   
   
   def validState
     
-    return (pendingbadConsequence.empty? && hiddenTreasures.size <= 4)    
+    return (@pendingbadConsequence.empty? && @hiddenTreasures.size <= 4)    
     
   end
   
   
   def initTreasures
+    
+    dealer = CardDealer.new
+        
+    dice = dice.new
+
+    bringToLife
+
+    trs = dealer.nextTreasure
+
+    @hiddenTreasures.push(trs)
+
+    number = dice.nextNumber
+
+    if number > 1
+
+      trs = dealer.nextTreasure
+
+      @hiddenTreasures.push(trs)
+    
+    end
+
+    if number == 6
+
+      trs = dealer.nextTreasure
+
+      @hiddenTreasures.push(trs)
+        
+    end
     
   end
   

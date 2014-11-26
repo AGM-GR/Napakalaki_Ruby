@@ -78,6 +78,65 @@ class BadConsequence
       end
   end
   
+  def adjustToFitTreasureList(visible, hidden)
+        
+    specificVisible = Array.new
+    specificHidden = Array.new
+
+    if (!@specificVisibleTreasures.empty?)
+
+      for i in 0..(visible.size-1)
+
+        for n in 0..(@specificVisibleTreasures.size-1)
+
+          if (visible[i].Type == @specificVisibleTreasures[n])
+
+            specificVisible.add(visible[i].Type)
+            
+          end
+        end
+      end
+    end
+
+    if (!@specificHiddenTreasures.empty?)
+
+      for i in 0..(hidden.size-1)
+
+        for n in 0..(@specificHiddenTreasures.size-1)
+
+          if (hidden[i].Type == @specificHiddenTreasures[n])
+
+            specificHidden.add(visible[i].Type)
+            
+          end
+        end
+     end
+    end
+
+    if @nVisibleTreasures > 0
+
+      for i in 0..(visible.size-1) && i < @nVisibleTreasures
+
+        specificVisible.push(visible[i].Type)
+        
+      end
+    end
+
+    if @nHiddenTreasures > 0
+
+      for i in 0..(hidden.size-1) && i < @nHiddenTreasures
+
+        specificHidden.push(hidden[i].Type)
+        
+      end
+    end
+
+    adjustBad = BadConsequence.newLevelSpecificTreasures(text, levels, specificVisible, specificHidden);
+
+    return adjustBad;
+    
+  end
+  
   private_class_method :new
   
   def to_s
