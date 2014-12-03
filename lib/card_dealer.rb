@@ -287,9 +287,9 @@ module Napakalaki
     def initCards
 
       initTreasureCardDeck
-      #shuffleTreasures
+      shuffleTreasures
       initMonsterCardDeck
-      #shuffleMonsters
+      shuffleMonsters
 
     end
 
