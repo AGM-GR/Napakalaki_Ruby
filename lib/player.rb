@@ -99,7 +99,7 @@ module Napakalaki
 
       if (@level-levels > 1) then
 
-        @level -= levels
+        @level =  @level - levels
 
       else
 
