@@ -35,7 +35,7 @@ module Napakalaki
       treasure = Treasure.new("A prueba de babas", 400, 2, 5, TreasureKind::ARMOR)
       @unusedTreasures.push(treasure)
 
-      treasure = Treasure.new("Botas de lluvia ácida", 800, 1, 1, TreasureKind::BOTHHAND)
+      treasure = Treasure.new("Botas de lluvia ácida", 800, 1, 1, TreasureKind::SHOE)
       @unusedTreasures.push(treasure)
 
       treasure = Treasure.new("Casco minero", 400, 2, 4, TreasureKind::HELMET)
@@ -148,7 +148,7 @@ module Napakalaki
       @unusedMonsters.push(Monster.new('El sopor de Dunwich', 2, badConsequence, prize))
 
       prize = Prize.new(3,1)
-      badConsequence = BadConsequence.newLevelNumberOfTreasures('pierdes todos tus tesoros visibles', 1, 10, 0)
+      badConsequence = BadConsequence.newLevelNumberOfTreasures('Pierdes todos tus tesoros visibles', 1, 10, 0)
       @unusedMonsters.push(Monster.new('El gorrón en el umbral', 10, badConsequence, prize))
 
       prize = Prize.new(2,1)
