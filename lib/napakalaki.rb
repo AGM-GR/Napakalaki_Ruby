@@ -23,7 +23,7 @@ module Napakalaki
 
       for i in 0..(names.size-1) do
 
-        @players.push(Player.newPlayer(names[i]))
+        @players.push(Player.new(names[i]))
 
       end
 
@@ -77,7 +77,7 @@ module Napakalaki
       if result == CombatResult::LOSEANDCONVERT then
         
         cultist = @dealer.nextCultist
-        cultistPLayer = CultistPlayer.newCultistPlayer(@currentPlayer, cultist)
+        cultistPLayer = CultistPlayer.new(@currentPlayer, cultist)
         
         @players.delete(@currentPlayer)
         @players.push(cultistPLayer)

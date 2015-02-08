@@ -16,9 +16,9 @@ module Napakalaki
     
     @@totalCultistPlayers = 0
     
-    def newCultistPlayer (player,cultist)
+    def initialize(player,cultist)
       
-      super.newPlayer(player)
+      super.newCopia(player)
       @culstistCard = cultist
       @@totalCultistPlayers += 1
       

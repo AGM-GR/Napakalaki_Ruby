@@ -13,34 +13,35 @@ require_relative 'card_dealer'
 
 module Napakalaki
   
-  require_relative 'napakalaki'
+  # require_relative 'napakalaki'
   
   class Player
 
     attr_reader :name, :dead, :level, :visibleTreasures, :hiddenTreasures, :pendingBadConsequence;
 
-    def initialize(name = '', dead = true, level = 1, visible = Array.new, hidden = Array.new)
+    def initialize(name)
 
       @name = name
-      @dead = dead
-      @level = level
-      @visibleTreasures = visible
-      @hiddenTreasures = hidden
+      @dead = true
+      @level = 1
+      @visibleTreasures = Array.new
+      @hiddenTreasures = Array.new
       @pendingBadConsequence
       @dice = Dice.instance
       @dealer = CardDealer.instance
 
     end
     
-    def newPlayer(name)
-      
-      new(name, true, 1, Array.new, Array.new)
-
-    end
-    
     def newCopia(player)
       
-      new(player.name, player.dead, player.level, player.visibleTreasures, player.hiddenTreasures)
+      @name = player.name 
+      @dead = player.dead 
+      @level = player.level
+      @visibleTreasures = player.visibleTreasures
+      @hiddenTreasures = player.hiddenTreasures
+      @pendingBadConsequence
+      @dice = Dice.instance
+      @dealer = CardDealer.instance
       
     end
 
