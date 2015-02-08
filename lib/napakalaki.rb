@@ -80,8 +80,7 @@ module Napakalaki
         cultistPLayer = CultistPlayer.new(@currentPlayer, cultist)
         
         @players.delete(@currentPlayer)
-        @players.push(cultistPLayer)
-        
+        @players.insert(@indexCurrentPlayer, cultistPLayer)
         @currentPlayer = cultistPLayer
         
       end

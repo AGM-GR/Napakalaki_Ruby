@@ -27,8 +27,10 @@ module Napakalaki
     end
 
     def getSpecialValue
-
-      return (@gainedLevels * CultistPlayer.totalCultistPlayers)
+      
+      bonus = CultistPlayer.getTotalCultistPlayers
+      
+      return (@gainedLevels * bonus)
 
     end
 

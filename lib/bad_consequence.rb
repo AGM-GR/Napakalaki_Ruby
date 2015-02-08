@@ -95,6 +95,9 @@ module Napakalaki
 
       specificVisible = Array.new
       specificHidden = Array.new
+      
+      tvisible = visible;
+      thidden = hidden;
       encontrado = false;
 
       if (!(@specificVisibleTreasures == nil) && !@specificVisibleTreasures.empty?) then
@@ -103,7 +106,7 @@ module Napakalaki
           
           encontrado = false
 
-          for i in 0..(visible.size-1) do
+          for i in 0..(tvisible.size-1) do
             
             if encontrado
               
@@ -111,9 +114,11 @@ module Napakalaki
               
             end
             
-            if (visible[i].getType == @specificVisibleTreasures[n]) then
+            if (tvisible[i].getType == @specificVisibleTreasures[n]) then
 
-              specificVisible.push(visible[i].getType)
+              specificVisible.push(tvisible[i].getType)
+              
+              tvisible.delete(i)
               
               encontrado = true
 
@@ -130,7 +135,7 @@ module Napakalaki
         
           encontrado = false
           
-          for i in 0..(hidden.size-1) do
+          for i in 0..(thidden.size-1) do
           
             if encontrado
               
@@ -138,9 +143,11 @@ module Napakalaki
               
             end
             
-            if (hidden[i].getType == @specificHiddenTreasures[n]) then
+            if (thidden[i].getType == @specificHiddenTreasures[n]) then
 
-              specificHidden.push(visible[i].getType)
+              specificHidden.push(thidden[i].getType)
+              
+              thidden.delete(i)
               
               encontrado = true
 

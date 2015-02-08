@@ -13,8 +13,6 @@ require_relative 'card_dealer'
 
 module Napakalaki
   
-  # require_relative 'napakalaki'
-  
   class Player
 
     attr_reader :name, :dead, :level, :visibleTreasures, :hiddenTreasures, :pendingBadConsequence;
@@ -246,43 +244,49 @@ module Napakalaki
 
       setPendingBadConsequence(pendingBad)
       
-      i = 0
-      
-      while i<@visibleTreasures.size do
+      while !@pendingBadConsequence.specificVisibleTreasures.empty? do
         
-        if (@pendingBadConsequence.specificVisibleTreasures == nil || @pendingBadConsequence.specificVisibleTreasures.empty?) then
+        encontrado = false
+        
+        for i in 0..(@visibleTreasures.size-1) do
           
-          break 
+          if (encontrado) then
+            
+            break
+            
+          end
+          
+          if @visibleTreasures[i].getType == @pendingBadConsequence.specificVisibleTreasures[0]
+            
+            discardVisibleTreasure(@visibleTreasures[i])
+            encontrado = true
+            
+          end
+          
         end
-        
-        if (@visibleTreasures[i].getType == @pendingBadConsequence.specificVisibleTreasures[0]) then
-
-          discardVisibleTreasure(@visibleTreasures[i]);
-
-          i = i-1
-        end
-        
-        i = i+1
         
       end
       
-      i = 0
-      
-      while i<@hiddenTreasures.size do
-
-        if (@pendingBadConsequence.specificHiddenTreasures == nil || @pendingBadConsequence.specificHiddenTreasures.empty?) then
-
-          break
-        end
-
-        if @hiddenTreasures[i].getType == @pendingBadConsequence.specificHiddenTreasures[0] then
-
-          discardVisibleTreasure(@hiddenTreasures[i]);
-
-          i = i-1
-        end
+      while !@pendingBadConsequence.specificHiddenTreasures.empty? do
         
-        i = i+1
+        encontrado = false
+        
+        for i in 0..(@hiddenTreasures.size-1) do
+          
+          if (encontrado) then
+            
+            break
+            
+          end
+          
+          if @hiddenTreasures[i].getType == @pendingBadConsequence.specificHiddenTreasures[0]
+            
+            discardHiddenTreasure(@hiddenTreasures[i])
+            encontrado = true
+            
+          end
+          
+        end
         
       end
       

@@ -45,9 +45,17 @@ module Napakalaki
     end
     
     def to_s
-
-      "Nombre Monstruo: #{@name} ,Nivel: #{@combatLevel} ,Mal rollo: #{@badConsequence.to_s}"
-
+      
+      if @levelChangeAgainstCultistPlayer == 0 then
+        
+        "Nombre Monstruo: #{@name} ,Nivel: #{@combatLevel} ,Mal rollo: #{@badConsequence.to_s}"
+      
+      else
+        
+        "Nombre Monstruo: #{@name} ,Nivel: #{@combatLevel} ,Mal rollo: #{@badConsequence.to_s}, Bonus contra Sectarios: #{@levelChangeAgainstCultistPlayer}"
+        
+      end
+      
     end 
 
     def kills

@@ -6,7 +6,7 @@
 
 require_relative 'treasure'
 require_relative 'monster'
-require_relative 'player'
+require 'player'
 
 module Napakalaki
   
@@ -18,8 +18,8 @@ module Napakalaki
     
     def initialize(player,cultist)
       
-      super.newCopia(player)
-      @culstistCard = cultist
+      newCopia(player)
+      @cultistCard = cultist
       @@totalCultistPlayers += 1
       
     end
@@ -46,6 +46,18 @@ module Napakalaki
       
       return false
       
+    end
+    
+    def self.getTotalCultistPlayers
+      
+      return @@totalCultistPlayers
+      
+    end
+    
+    def to_s
+
+      "#{@name} ,Nivel: #{@level}, Cultist."
+
     end
     
   end
