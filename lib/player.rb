@@ -1,5 +1,5 @@
-# encoding: utf-8
-# 
+# encoding: UTF-8
+
 # To change this license header, choose License Headers in Project Properties.
 # To change this template file, choose Tools | Templates
 # and open the template in the editor.
@@ -19,17 +19,29 @@ module Napakalaki
 
     attr_reader :name, :dead, :level, :visibleTreasures, :hiddenTreasures, :pendingBadConsequence;
 
-    def initialize(name)
+    def initialize(name = '', dead = true, level = 1, visible = Array.new, hidden = Array.new)
 
       @name = name
-      @dead = true
-      @level = 1
-      @visibleTreasures = Array.new
-      @hiddenTreasures = Array.new
+      @dead = dead
+      @level = level
+      @visibleTreasures = visible
+      @hiddenTreasures = hidden
       @pendingBadConsequence
       @dice = Dice.instance
       @dealer = CardDealer.instance
 
+    end
+    
+    def newPlayer(name)
+      
+      new(name, true, 1, Array.new, Array.new)
+
+    end
+    
+    def newCopia(player)
+      
+      new(player.name, player.dead, player.level, player.visibleTreasures, player.hiddenTreasures)
+      
     end
 
     def getName
@@ -43,7 +55,7 @@ module Napakalaki
       @dead = false
 
     end
-
+    
     def getCombatLevel
 
       lvl = @level
@@ -178,19 +190,15 @@ module Napakalaki
 
     end
 
-
     def computeGoldCoinsValue(trs)
 
       gold = 0
-      #lvls = 0
 
       for i in 0..(trs.size-1) do
 
         gold += trs[i].goldCoins
 
       end
-
-      #lvls = gold / 1000.0
 
       return gold
 
@@ -361,7 +369,7 @@ module Napakalaki
     def combat (monster)
 
       myLevel = getCombatLevel
-      monsterLevel = monster.combatLevel
+      monsterLevel = getOponentLevel(monster)
 
       if myLevel > monsterLevel then
 
@@ -397,8 +405,17 @@ module Napakalaki
 
             applyBadConsequence(bad)
 
-            result = CombatResult::LOSE
-
+            cultist = shouldConvert
+            
+            if cultist then
+              
+              result = CombatResult::LOSEANDCONVERT
+              
+            else
+              
+              result = CombatResult::LOSE
+             
+            end
           end
 
         else
@@ -547,7 +564,29 @@ module Napakalaki
       "#{@name} ,Nivel: #{@level}"
 
     end
-
+    
+    def getOponentLevel(monster)
+      
+      return (monster.getBasicValue)
+      
+    end
+    
+    def shouldConvert
+      
+      number = @dice.nextNumber
+      
+      if number == 6 then
+        
+        return true
+        
+      else
+        
+        return false
+        
+      end
+      
+    end
+    
   end
 
 end

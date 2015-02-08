@@ -1,11 +1,12 @@
-# encoding: utf-8
-# 
+# encoding: UTF-8
+
 # To change this license header, choose License Headers in Project Properties.
 # To change this template file, choose Tools | Templates
 # and open the template in the editor.
 
 require_relative 'player'
 require_relative 'card_dealer'
+require_relative 'cultist_player'
 
 module Napakalaki
 
@@ -22,7 +23,7 @@ module Napakalaki
 
       for i in 0..(names.size-1) do
 
-        @players.push(Player.new(names[i]))
+        @players.push(Player.newPlayer(names[i]))
 
       end
 
@@ -72,6 +73,18 @@ module Napakalaki
       result = @currentPlayer.combat(@currentMonster)
 
       @dealer.giveMonsterBack(@currentMonster)
+      
+      if result == CombatResult::LOSEANDCONVERT then
+        
+        cultist = @dealer.nextCultist
+        cultistPLayer = CultistPlayer.newCultistPlayer(@currentPlayer, cultist)
+        
+        @players.delete(@currentPlayer)
+        @players.push(cultistPLayer)
+        
+        @currentPlayer = cultistPLayer
+        
+      end
 
       return result
 

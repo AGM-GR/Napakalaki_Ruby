@@ -5,15 +5,20 @@
 # and open the template in the editor.
 
 module Napakalaki
-  
-  module CombatResult
 
-    WINANDWINGAME = :WINANDWINGAME
-    WIN = :WIN
-    LOSE = :LOSE
-    LOSEANDESCAPE = :LOSEANDESCAPE
-    LOSEANDDIE = :LOSEANDDIE
-    LOSEANDCONVERT = :LOSEANDCONVERT
+  module Card
+
+    def getBasicValue
+
+      raise NotImplementedError.new
+
+    end
+
+    def getSpecialValue
+
+      raise NotImplementedError.new
+
+    end
 
   end
 
